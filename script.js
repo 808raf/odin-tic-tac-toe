@@ -51,6 +51,11 @@ function Gameboard() {
     return `It is ${activePlayer.name}'s turn!`;
   };
 
+  const getWinner = () => winner;
+  const setWinner = (player) => {
+    winner = player;
+  };
+
   const checkWinner = (board) => {
     const winningMoves = [
       [0, 1, 2], // Vertical
@@ -66,8 +71,7 @@ function Gameboard() {
     for (let [a, b, c] of winningMoves) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
         console.log(`${activePlayer.name} is the winner!`);
-        winner = board[a];
-        return board[a];
+        setWinner(activePlayer.name);
       }
     }
   };
@@ -77,8 +81,9 @@ function Gameboard() {
     board.placeMarker(activePlayer.marker, cell);
     board.printBoard();
 
+    checkWinner(board.getBoard());
+
     if (winner === "") {
-      checkWinner(board.getBoard());
       switchPlayerTurn();
       playRound();
       console.log(getActivePlayer());
@@ -89,5 +94,5 @@ function Gameboard() {
   board.printBoard();
   playRound();
 
-  return { getActivePlayer, printNewRound };
+  return { getActivePlayer, printNewRound, getWinner };
 })();
