@@ -66,6 +66,7 @@ function Gameboard() {
 
 (function GameController() {
   const board = Gameboard();
+  const playerDiv = document.querySelector(".player-turn");
 
   let playerOneName = "Player 1";
   let playerTwoName = "Player 2";
@@ -91,11 +92,8 @@ function Gameboard() {
   };
 
   const printNewRound = () => {
+    playerDiv.innerText = `It is ${getActivePlayer().name}'s turn!`;
     console.log(`It is ${getActivePlayer().name}'s turn!`);
-  };
-
-  const alertNewRound = () => {
-    return `It is ${getActivePlayer().name}'s turn!`;
   };
 
   const getWinner = () => winner;
@@ -119,10 +117,12 @@ function Gameboard() {
 
     for (let [a, b, c] of winningMoves) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        playerDiv.innerText = `${getActivePlayer().name} is the winner!`;
         console.log(`${getActivePlayer().name} is the winner!`);
         setWinner(getActivePlayer().name);
       } else if (round === 9) {
         setWinner("Tie");
+        playerDiv.innerText = "It's a tie! No one wins.";
         console.log("It's a tie! No one wins.");
       }
     }
@@ -132,8 +132,10 @@ function Gameboard() {
   const resetBoard = () => {
     round = 0;
     winner = "";
+    setActivePlayer(0);
     board.resetBoard();
     board.updateBoard();
+    playerDiv.innerText = `It is ${getActivePlayer().name}'s turn!`;
     playRound();
   };
   resetBtn.addEventListener("click", resetBoard);

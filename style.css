@@ -164,6 +164,12 @@ table {
 
 .container-top {
   margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.player-turn {
+  margin-top: 20px;
 }
 
 /*bg*/
