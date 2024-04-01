@@ -123,6 +123,7 @@ function Gameboard() {
         playerDiv.innerText = `${getActivePlayer().name} is the winner!`;
         setWinner(getActivePlayer().name);
       } else if (round === 9) {
+        updateBoard();
         setWinner("Tie");
         playerDiv.innerText = "It's a tie! No one wins.";
       }
