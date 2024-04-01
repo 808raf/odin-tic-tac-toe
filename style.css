@@ -147,4 +147,10 @@ table {
   width: 200px;
   height: 200px;
   border: 1px solid black;
+  font-size: 10rem;
+  text-align: center;
+}
+
+.square:hover {
+  cursor: pointer;
 }
