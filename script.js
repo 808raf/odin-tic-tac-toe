@@ -7,6 +7,49 @@ function Gameboard() {
     console.log(getBoard());
   };
 
+  const createBoard = () => {
+    const container = document.querySelector(".container");
+
+    for (let i = 0; i < 3; i++) {
+      const row = document.createElement("div");
+      row.classList.add("row", `row-${i}`);
+
+      for (let j = 0; j < 3; j++) {
+        const square = document.createElement("div");
+        square.classList.add(`square`);
+
+        row.appendChild(square);
+      }
+      container.appendChild(row);
+    }
+
+    const squareDiv = document.querySelectorAll(".square");
+
+    squareDiv.forEach((square, index) => {
+      square.classList.add(`square-${index}`);
+      square.setAttribute("data-index-number", `${index}`);
+      square.innerHTML = board[index];
+    });
+
+    // squareDiv.forEach((square) => {
+    //   square.addEventListener("click", (e) => {
+    //     let cell = 0;
+    //     cell = e.target.dataset.indexNumber;
+    //   });
+    // });
+  };
+
+  const clearBoard = () => {
+    const container = document.querySelector(".container");
+
+    container.replaceChildren();
+  };
+
+  const updateBoard = () => {
+    clearBoard();
+    createBoard();
+  };
+
   const placeMarker = (playerMarker, cell) => {
     if (board[cell] !== "") {
       return;
@@ -15,11 +58,20 @@ function Gameboard() {
     board[cell] = playerMarker;
   };
 
-  return { getBoard, printBoard, placeMarker };
+  return {
+    getBoard,
+    printBoard,
+    placeMarker,
+    createBoard,
+    updateBoard,
+  };
 }
+
+function DisplayController() {}
 
 (function GameController() {
   const board = Gameboard();
+  const controller = DisplayController();
 
   let playerOneName = "Player 1";
   let playerTwoName = "Player 2";
@@ -44,11 +96,11 @@ function Gameboard() {
   };
 
   const printNewRound = () => {
-    console.log(`It is ${activePlayer.name}'s turn!`);
+    console.log(`It is ${getActivePlayer().name}'s turn!`);
   };
 
   const alertNewRound = () => {
-    return `It is ${activePlayer.name}'s turn!`;
+    return `It is ${getActivePlayer().name}'s turn!`;
   };
 
   const getWinner = () => winner;
@@ -70,29 +122,40 @@ function Gameboard() {
 
     for (let [a, b, c] of winningMoves) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        console.log(`${activePlayer.name} is the winner!`);
-        setWinner(activePlayer.name);
+        console.log(`${getActivePlayer().name} is the winner!`);
+        setWinner(getActivePlayer().name);
       }
     }
   };
 
   const playRound = () => {
-    const cell = prompt(alertNewRound());
-    board.placeMarker(activePlayer.marker, cell);
-    board.printBoard();
+    const squareDiv = document.querySelectorAll(".square");
 
-    checkWinner(board.getBoard());
+    squareDiv.forEach((square) => {
+      square.addEventListener("click", (e) => {
+        let cell = 0;
+        cell = Number(e.target.dataset.indexNumber);
 
-    if (winner === "") {
-      switchPlayerTurn();
-      playRound();
-      console.log(getActivePlayer());
-    }
+        if (square.innerText !== "") {
+          return;
+        }
+        board.placeMarker(getActivePlayer().marker, cell);
+        checkWinner(board.getBoard());
+        board.updateBoard();
+        if (winner == "") {
+          board.updateBoard();
+          switchPlayerTurn();
+          playRound();
+          console.log(getActivePlayer());
+        }
+      });
+    });
   };
 
+  board.createBoard();
+  playRound();
   printNewRound();
   board.printBoard();
-  playRound();
 
   return { getActivePlayer, printNewRound, getWinner };
 })();
