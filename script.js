@@ -101,7 +101,7 @@ function Gameboard() {
     winner = player;
   };
 
-  const checkWinner = (board) => {
+  const checkWinner = (currBoard) => {
     round++;
 
     const winningMoves = [
@@ -116,15 +116,19 @@ function Gameboard() {
     ];
 
     for (let [a, b, c] of winningMoves) {
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      if (
+        currBoard[a] &&
+        currBoard[a] === currBoard[b] &&
+        currBoard[a] === currBoard[c]
+      ) {
         winningMove = [a, b, c];
         updateWinningColor();
 
         playerDiv.innerText = `${getActivePlayer().name} is the winner!`;
         setWinner(getActivePlayer().name);
       } else if (round === 9) {
-        updateBoard();
         setWinner("Tie");
+        board.updateBoard();
         playerDiv.innerText = "It's a tie! No one wins.";
       }
     }
