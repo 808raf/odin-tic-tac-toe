@@ -131,6 +131,7 @@ function Gameboard() {
   const resetBtn = document.querySelector(".reset");
   const resetBoard = () => {
     round = 0;
+    winner = "";
     board.resetBoard();
     board.updateBoard();
     playRound();
