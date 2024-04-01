@@ -30,13 +30,6 @@ function Gameboard() {
       square.setAttribute("data-index-number", `${index}`);
       square.innerHTML = board[index];
     });
-
-    // squareDiv.forEach((square) => {
-    //   square.addEventListener("click", (e) => {
-    //     let cell = 0;
-    //     cell = e.target.dataset.indexNumber;
-    //   });
-    // });
   };
 
   const clearBoard = () => {
@@ -71,10 +64,10 @@ function DisplayController() {}
 
 (function GameController() {
   const board = Gameboard();
-  const controller = DisplayController();
 
   let playerOneName = "Player 1";
   let playerTwoName = "Player 2";
+  let round = 0;
 
   const players = [
     { name: playerOneName, marker: "x" },
@@ -109,6 +102,9 @@ function DisplayController() {}
   };
 
   const checkWinner = (board) => {
+    round++;
+    console.log(round);
+
     const winningMoves = [
       [0, 1, 2], // Vertical
       [3, 4, 5],
@@ -124,6 +120,9 @@ function DisplayController() {}
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
         console.log(`${getActivePlayer().name} is the winner!`);
         setWinner(getActivePlayer().name);
+      } else if (round === 9) {
+        setWinner("Tie");
+        console.log("It's a tie! No one wins.");
       }
     }
   };
