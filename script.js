@@ -2,6 +2,9 @@ function Gameboard() {
   const board = ["", "", "", "", "", "", "", "", ""];
 
   const getBoard = () => board;
+  const resetBoard = () => {
+    board.forEach((_, index) => (board[index] = ""));
+  };
 
   const printBoard = () => {
     console.log(getBoard());
@@ -57,10 +60,9 @@ function Gameboard() {
     placeMarker,
     createBoard,
     updateBoard,
+    resetBoard,
   };
 }
-
-function DisplayController() {}
 
 (function GameController() {
   const board = Gameboard();
@@ -103,7 +105,6 @@ function DisplayController() {}
 
   const checkWinner = (board) => {
     round++;
-    console.log(round);
 
     const winningMoves = [
       [0, 1, 2], // Vertical
@@ -127,6 +128,15 @@ function DisplayController() {}
     }
   };
 
+  const resetBtn = document.querySelector(".reset");
+  const resetBoard = () => {
+    round = 0;
+    board.resetBoard();
+    board.updateBoard();
+    playRound();
+  };
+  resetBtn.addEventListener("click", resetBoard);
+
   const playRound = () => {
     const squareDiv = document.querySelectorAll(".square");
 
@@ -144,8 +154,8 @@ function DisplayController() {}
         if (winner == "") {
           board.updateBoard();
           switchPlayerTurn();
+          printNewRound();
           playRound();
-          console.log(getActivePlayer());
         }
       });
     });
@@ -156,5 +166,5 @@ function DisplayController() {}
   printNewRound();
   board.printBoard();
 
-  return { getActivePlayer, printNewRound, getWinner };
+  return { getActivePlayer, printNewRound, getWinner, playRound };
 })();
