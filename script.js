@@ -71,6 +71,7 @@ function Gameboard() {
   let playerOneName = "Player 1";
   let playerTwoName = "Player 2";
   let round = 0;
+  let winningMove = [];
 
   const players = [
     { name: playerOneName, marker: "x" },
@@ -93,7 +94,6 @@ function Gameboard() {
 
   const printNewRound = () => {
     playerDiv.innerText = `It is ${getActivePlayer().name}'s turn!`;
-    console.log(`It is ${getActivePlayer().name}'s turn!`);
   };
 
   const getWinner = () => winner;
@@ -117,15 +117,31 @@ function Gameboard() {
 
     for (let [a, b, c] of winningMoves) {
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        winningMove = [a, b, c];
+        updateWinningColor();
+
         playerDiv.innerText = `${getActivePlayer().name} is the winner!`;
-        console.log(`${getActivePlayer().name} is the winner!`);
         setWinner(getActivePlayer().name);
       } else if (round === 9) {
         setWinner("Tie");
         playerDiv.innerText = "It's a tie! No one wins.";
-        console.log("It's a tie! No one wins.");
       }
     }
+  };
+
+  const updateWinningColor = () => {
+    board.updateBoard();
+    const square1 = winningMove[0];
+    const square2 = winningMove[1];
+    const square3 = winningMove[2];
+
+    const square1Div = document.querySelector(`.square-${square1}`);
+    const square2Div = document.querySelector(`.square-${square2}`);
+    const square3Div = document.querySelector(`.square-${square3}`);
+
+    square1Div.classList.add("green");
+    square2Div.classList.add("green");
+    square3Div.classList.add("green");
   };
 
   const resetBtn = document.querySelector(".reset");
@@ -153,7 +169,7 @@ function Gameboard() {
         }
         board.placeMarker(getActivePlayer().marker, cell);
         checkWinner(board.getBoard());
-        board.updateBoard();
+        // board.updateBoard();
         if (winner == "") {
           board.updateBoard();
           switchPlayerTurn();
